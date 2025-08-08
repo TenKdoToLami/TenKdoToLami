@@ -5,300 +5,78 @@
   <title>TenKdoToLami - Making Crazy Stuff</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: black;
-      color: #0ff;
-      font-family: 'Share Tech Mono', monospace;
-      height: auto;
-      min-height: 100vh;
-      /* Removed overflow:hidden to allow scroll */
-    }
-
-    canvas {
-      position: fixed; /* fixed to stay during scroll */
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      padding: 20px;
-      user-select: none;
-    }
-
-    /* Glitch effect for title */
-    .glitch {
-      position: relative;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 4.5em;
-      font-weight: 700;
-      color: #0ff;
-      letter-spacing: 0.1em;
-      animation: flicker 2s infinite;
-      user-select: text;
-    }
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      opacity: 0.8;
-      clip-path: polygon(0 2%, 100% 2%, 100% 45%, 0 45%);
-      user-select: none;
-    }
-    .glitch::before {
-      left: 2px;
-      text-shadow: -2px 0 red;
-      animation: glitchTop 2s infinite linear alternate-reverse;
-    }
-    .glitch::after {
-      left: -2px;
-      text-shadow: -2px 0 blue;
-      animation: glitchBottom 2s infinite linear alternate-reverse;
-      clip-path: polygon(0 55%, 100% 55%, 100% 98%, 0 98%);
-    }
-
-    @keyframes glitchTop {
-      0% {transform: translate(0);}
-      20% {transform: translate(-3px, -2px);}
-      40% {transform: translate(3px, 2px);}
-      60% {transform: translate(-3px, 1px);}
-      80% {transform: translate(3px, -1px);}
-      100% {transform: translate(0);}
-    }
-    @keyframes glitchBottom {
-      0% {transform: translate(0);}
-      20% {transform: translate(3px, 2px);}
-      40% {transform: translate(-3px, -2px);}
-      60% {transform: translate(3px, -1px);}
-      80% {transform: translate(-3px, 1px);}
-      100% {transform: translate(0);}
-    }
-
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 22%, 24%, 55% {
-        opacity: 0.5;
-      }
-    }
-
-    p {
-      font-size: 1.5em;
-      margin-top: 10px;
-      color: #ccc;
-    }
-
-    .buttons {
-      margin-top: 30px;
-    }
-
-    .buttons a {
-      color: #0ff;
-      border: 1px solid #0ff;
-      padding: 10px 20px;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-      user-select: text;
-    }
-
-    .buttons a:hover {
-      background: #0ff;
-      color: black;
-    }
-
-    /* Repo Section */
-    #repos {
-      max-width: 900px;
-      margin: 50px auto 100px;
-      padding: 0 15px;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 1s ease, transform 1s ease;
-      user-select: text;
-      color: #0ff;
-      font-family: 'Share Tech Mono', monospace;
-    }
-
-    #repos.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    #repos h2 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      text-align: center;
-      text-shadow: 0 0 15px #0ff;
-    }
-
-    .repo {
-      background: rgba(0, 255, 255, 0.1);
-      border: 1px solid #0ff;
-      padding: 15px 20px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #0ff6;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .repo:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 25px #0ff, 0 0 40px #0ff;
-    }
-    .repo h3 {
-      margin: 0 0 5px 0;
-      font-family: 'Orbitron', sans-serif;
-      color: #0ff;
-    }
-    .repo p {
-      margin: 0 0 8px 0;
-      color: #ccc;
-      font-size: 1rem;
-    }
-    .repo .stars {
-      font-weight: 700;
-      color: #ff0;
-      font-family: 'Share Tech Mono', monospace;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
 
+<body id="top">
 <canvas id="bg"></canvas>
 
-<div class="content">
+
+<nav id="sidebar">
+  <ul>
+    <li><a href="#top" class="nav-link" title="Home">🏠<span class="link-text">Home</span></a></li>
+    <li><a href="#skills" class="nav-link" title="Skills">🛠️<span class="link-text">Skills</span></a></li>
+    <li><a href="#repos" class="nav-link" title="Repos">📁<span class="link-text">Repos</span></a></li>
+  </ul>
+  <button id="mode-toggle" title="Toggle dark/light mode">🌙</button>
+</nav>
+
+
+<main class="content">
   <h1 class="glitch" data-text="TenKdoToLami">TenKdoToLami</h1>
   <p>Making crazy stuff. Breaking sanity since forever.</p>
 
-  <div class="buttons">
+  <nav class="buttons">
     <a href="https://github.com/tenkdotolami" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</main>
+
+
+<section id="skills">
+  <h2>My Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <h3>C / C++</h3>
+      <p>Low-level systems development, embedded, performance-focused projects, algorithms.</p>
+    </div>
+    <div class="skill-card">
+      <h3>C#</h3>
+      <p>.NET desktop tools, async patterns, object-oriented apps.</p>
+    </div>
+    <div class="skill-card">
+      <h3>Rust</h3>
+      <p>Memory-safe, concurrency-aware systems with ownership model. Academic familiarity.</p>
+    </div>
+    <div class="skill-card">
+      <h3>Java</h3>
+      <p>University-level experience with OOP, syntax, and core libraries.</p>
+    </div>
+    <div class="skill-card">
+      <h3>Prolog</h3>
+      <p>Logic programming, declarative paradigms, used in AI-related coursework.</p>
+    </div>
+    <div class="skill-card">
+      <h3>Racket / Pascal</h3>
+      <p>Functional + procedural approaches, academic and exploratory projects.</p>
+    </div>
+    <div class="skill-card">
+      <h3>Lua</h3>
+      <p>Hobbyist scripting for automation and small game mods or experiments.</p>
+    </div>
+    <div class="skill-card">
+      <h3>HTML</h3>
+      <p>Used for building static personal sites, interfaces, and prototypes.</p>
+    </div>
   </div>
-</div>
+</section>
+
 
 <section id="repos">
   <h2>My GitHub Repositories</h2>
   <div id="repo-list">Loading repositories...</div>
 </section>
 
-<script>
-  // Particle Background
-  const canvas = document.getElementById('bg');
-  const ctx = canvas.getContext('2d');
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resizeCanvas();
-
-  const particles = [];
-  for (let i = 0; i < 100; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 1,
-      vy: (Math.random() - 0.5) * 1,
-      radius: Math.random() * 2 + 1
-    });
-  }
-
-  function animate() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#0ff";
-
-    for (let p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-
-  window.addEventListener('resize', resizeCanvas);
-
-  // Fetch GitHub repos from API and display them
-  async function fetchRepos() {
-    const container = document.getElementById('repo-list');
-    container.innerHTML = 'Loading repositories...';
-
-    try {
-      const response = await fetch('https://api.github.com/users/tenkdotolami/repos?sort=updated');
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-      const repos = await response.json();
-
-      if (repos.length === 0) {
-        container.innerHTML = '<p>No public repositories found.</p>';
-        return;
-      }
-
-      container.innerHTML = '';
-      repos.forEach(repo => {
-        const repoEl = document.createElement('div');
-        repoEl.className = 'repo';
-
-        repoEl.innerHTML = `
-          <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
-          <p>${repo.description || 'No description provided.'}</p>
-          <p class="stars">⭐ Stars: ${repo.stargazers_count}</p>
-        `;
-
-        container.appendChild(repoEl);
-      });
-
-    } catch (error) {
-      container.innerHTML = `<p>Error loading repos: ${error.message}</p>`;
-    }
-  }
-
-  fetchRepos();
-
-  // Show repos on scroll
-  const reposSection = document.getElementById('repos');
-
-  function checkScroll() {
-    const triggerPoint = window.innerHeight / 2; // halfway viewport
-    const reposTop = reposSection.getBoundingClientRect().top;
-
-    if (reposTop < triggerPoint) {
-      reposSection.classList.add('visible');
-      window.removeEventListener('scroll', checkScroll);
-    }
-  }
-  window.addEventListener('scroll', checkScroll);
-  // Check in case user reloads page scrolled down already
-  checkScroll();
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
